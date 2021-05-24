@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:payments-api="http://www.mulesoft.org/schema/mule/payments-api"
+	xmlns:order-details-api="http://www.mulesoft.org/schema/mule/order-details-api"
+	xmlns:customer-api="http://www.mulesoft.org/schema/mule/customer-api" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/customer-api http://www.mulesoft.org/schema/mule/customer-api/current/mule-customer-api.xsd
+http://www.mulesoft.org/schema/mule/order-details-api http://www.mulesoft.org/schema/mule/order-details-api/current/mule-order-details-api.xsd
+http://www.mulesoft.org/schema/mule/payments-api http://www.mulesoft.org/schema/mule/payments-api/current/mule-payments-api.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	    <customer-api:config name="Customer_API_Config" doc:name="Customer API Config" doc:id="e765db03-0c8c-4c7e-8f16-fd9b2ceb7f81" property_host="customersapi-project-shrutihp.us-e2.cloudhub.io" property_port="80" property_protocol="HTTP" property_basePath="/api" />
+	<order-details-api:config name="OrderDetails_API_Config" doc:name="OrderDetails API Config" doc:id="325451c4-2a3e-4fbe-8448-7511f38aacd9" property_host="orderdetailsapi-project-shrutihp.us-e2.cloudhub.io" property_port="80" property_protocol="HTTP" property_basePath="/api" />
+	<payments-api:config name="Payments_API_Config" doc:name="Payments API Config" doc:id="c97e9542-5a5b-4418-ab4a-4de55ae618d0" property_host="payment-project-shivam.us-e2.cloudhub.io" property_port="80" property_protocol="HTTP" property_basePath="/api" />
+	<flow name="getAllDetailsFlow" doc:id="2dd45199-cecc-4b6d-a4e6-80fd823c8ffe" >
+		<scatter-gather doc:name="Scatter-Gather" doc:id="7d349846-8dc9-479b-8772-e4319b6e6875" >
+			<route >
+				<customer-api:get-all-customer-details doc:name="Get All Customer details" doc:id="016d6ecb-519c-4f9a-87b5-8a82ad27fc74" config-ref="Customer_API_Config"/>
+			</route>
+			<route >
+				<order-details-api:get-all-orders doc:name="Get All Orders" doc:id="479a34fc-a621-4497-9746-2045a76a4474" config-ref="OrderDetails_API_Config"/>
+			</route>
+			<route >
+				<payments-api:get-all-payments-details doc:name="Get All Payments details" doc:id="c6feb63a-2240-49b6-a3f2-922d080bf7d0" config-ref="Payments_API_Config"/>
+			</route>
+		</scatter-gather>
+		<ee:transform doc:name="Transform Message" doc:id="64dd6db8-bdff-4dc9-901a-0da20b12c0b0" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>

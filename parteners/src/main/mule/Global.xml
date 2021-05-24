@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+	<configuration doc:name="Configuration" doc:id="43f7fdeb-0fbf-4dfa-a69f-d086a5bc7179" defaultErrorHandler-ref="GlobalError_Handler" />
+	<configuration-properties doc:name="Configuration properties" doc:id="76e2717e-b66a-48ce-9c07-28b7c4fc6eba" file="Parteners-DEV.yaml" />
+	<error-handler name="GlobalError_Handler" doc:id="e0f29c27-3dca-4a80-b677-f2b118e04351" >
+		<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="b4ccbc66-6563-4227-a5c4-185f70bd6d5e" type="ANY">
+			<set-payload value="#[error.description]" doc:name="Set Payload" doc:id="3a63dfe8-6e84-47ea-b55d-86238ee1c799" />
+			<set-variable value="500" doc:name="httpStatus" doc:id="50cc2579-02f9-454e-aa8c-bb87d2ed87d3" variableName="httpStatus"/>
+		</on-error-continue>
+	</error-handler>
+	 <http:listener-config name="parteners-api-httpListenerConfig">
+        <http:listener-connection host="${http.host}" port="${http.port}" />
+    </http:listener-config>
+   
+    
+</mule>
